@@ -26,6 +26,8 @@ class BookingController extends AbstractController
 
     /**
      * @Route("/", name="booking.index")
+     * @param Request $request
+     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -33,11 +35,13 @@ class BookingController extends AbstractController
             try{
                 $dateRangeParse = explode("-", $request->get('daterange'));
 
-                $from = Carbon::parse($dateRangeParse[0])->format('Y-m-d');
-                $to = Carbon::parse($dateRangeParse[1])->format('Y-m-d');
+                $from = Carbon::parse($dateRangeParse[0]);
+                $to = Carbon::parse($dateRangeParse[1]);
 
                 return $this->render('booking/index.html.twig',[
-                    'availableRooms' => $this->roomRepo->getAvailableRooms($from, $to)
+                    'availableRooms' => $this->roomRepo->getAvailableRooms(
+                        $from->format('Y-m-d'),
+                        $to->format('Y-m-d'))
                 ]);
 
             } catch (\Exception $exception) {

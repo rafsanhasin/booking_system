@@ -37,7 +37,9 @@
 
                     <td>{{ room.name }}</td>
                     <td>{{ room.price }}</td>
-                    <td><a href="" class="btn btn-primary">Book</a></td>
+                    <td>
+                        <a href="" class="btn btn-primary"> Reserve</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -77,7 +79,6 @@
             $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).val('');
             });
-
         });
     </script>
 
