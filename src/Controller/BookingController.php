@@ -2,19 +2,12 @@
 
 namespace App\Controller;
 
-use App\Repository\ReservationsRepository;
 use App\Repository\RoomRepository;
 use App\Services\DateParserService;
-use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Router;
-use function Symfony\Component\Translation\t;
 
 class BookingController extends AbstractController
 {
@@ -43,7 +36,7 @@ class BookingController extends AbstractController
                 ]);
 
             } catch (\Exception $exception) {
-                $this->addFlash('error', $exception->getMessage());
+                $this->addFlash('error', "Internal Server Error");
                 return $this->redirect($this->generateUrl('booking.index'));
             }
         }

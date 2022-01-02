@@ -4,16 +4,13 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 {% endblock %}
 
-
-
 {% block body %}
-
     <div class="example-wrapper">
         <form>
             <div class="row">
                 <div class="form-group col-md-4">
                     <label>Select a date range</label>
-                    <input type='text' class="form-control" name="daterange" value="{{ app.request.query.get('daterange') }}"/>
+                    <input type='text' readonly class="form-control" name="daterange" value="{{ app.request.query.get('daterange') }}"/>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -21,34 +18,34 @@
     </div>
 
     <div style="padding-top: 30px;">
-    {% if (availableRooms is defined) and (availableRooms|length > 0) %}
-        <table class="table table-stripped">
-            <thead>
-                <tr>
-                    <td>Room no</td>
-                    <td>Price</td>
-                    <td>Action</td>
-                </tr>
+        {% if (availableRooms is defined) and (availableRooms|length > 0) %}
+            <table class="table table-stripped">
+                <thead>
+                    <tr>
+                        <td>Room no</td>
+                        <td>Price</td>
+                        <td>Action</td>
+                    </tr>
 
-            </thead>
-            <tbody>
-            {% for room in availableRooms %}
-                <tr>
+                </thead>
+                <tbody>
+                {% for room in availableRooms %}
+                    <tr>
 
-                    <td>{{ room.name }}</td>
-                    <td>{{ room.price }}</td>
-                    <td>
-                        <button class="btn btn-primary" onclick="showInvoice({{ room.id }}, '{{ room.name }}', {{ room.price }})">Reserve</button>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+                        <td>{{ room.name }}</td>
+                        <td>{{ room.price }}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="showInvoice({{ room.id }}, '{{ room.name }}', {{ room.price }})">Reserve</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
-    {% if (availableRooms is defined) and (availableRooms|length == 0) %}
-        <div>No Rooms available</div>
-    {% endif %}
+        {% if (availableRooms is defined) and (availableRooms|length == 0) %}
+            <div>No Rooms available</div>
+        {% endif %}
     </div>
 
     <div class="container">
@@ -222,7 +219,6 @@
 
             $('#myModal').modal('toggle');
         }
-
 
     </script>
 

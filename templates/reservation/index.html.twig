@@ -1,37 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div style="padding-top: 30px;">
+        {% if (reservations is defined) and (reservations|length > 0) %}
+            <table class="table table-stripped">
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Room no</td>
+                        <td>Customer Name</td>
+                        <td>From</td>
+                        <td>To</td>
+                        <td>Duration</td>
+                        <td>Amount</td>
+                    </tr>
+                </thead>
 
-<div style="padding-top: 30px;">
-    {% if (reservations is defined) and (reservations|length > 0) %}
-        <table class="table table-stripped">
-            <thead>
-            <tr>
-                <td>Id</td>
-                <td>Room no</td>
-                <td>Customer Name</td>
-                <td>From</td>
-                <td>To</td>
-                <td>Duration</td>
-                <td>Amount</td>
-            </tr>
-
-            </thead>
-            <tbody>
-            {% for reservation in reservations %}
-                <tr>
-
-                    <td>{{ reservation.id }}</td>
-                    <td>{{ reservation.room }}</td>
-                    <td>{{ reservation.customer }}</td>
-                    <td>{{ reservation.fromDate | date('Y-m-d') }}</td>
-                    <td>{{ reservation.toDate | date('Y-m-d') }}</td>
-                    <td>{{ reservation.duration }}</td>
-                    <td>{{ reservation.totalPrice }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-<div>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.id }}</td>
+                            <td>{{ reservation.room }}</td>
+                            <td>{{ reservation.customer }}</td>
+                            <td>{{ reservation.fromDate | date('Y-m-d') }}</td>
+                            <td>{{ reservation.toDate | date('Y-m-d') }}</td>
+                            <td>{{ reservation.duration }}</td>
+                            <td>{{ reservation.totalPrice }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    <div>
 {% endblock %}

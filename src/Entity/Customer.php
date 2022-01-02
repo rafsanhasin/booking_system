@@ -68,26 +68,9 @@ class Customer
         return $this;
     }
 
-    public function getReservation(): ?Reservations
+    public function getReservation(): ?Collection
     {
         return $this->reservation;
-    }
-
-    public function setReservation(?Reservations $reservation): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($reservation === null && $this->reservation !== null) {
-            $this->reservation->setReservation(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($reservation !== null && $reservation->getReservation() !== $this) {
-            $reservation->setReservation($this);
-        }
-
-        $this->reservation = $reservation;
-
-        return $this;
     }
 
     public function addReservation(Reservations $reservation): self
