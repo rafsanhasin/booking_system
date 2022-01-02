@@ -19,6 +19,23 @@ class ReservationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservations::class);
     }
 
+    public function getAllWithRelations() {
+        return $this->createQueryBuilder('res')
+            ->select('res.id')
+            ->select('res.fromDate')
+            ->addSelect('res.toDate')
+            ->addSelect('res.toDate')
+            ->addSelect('res.totalPrice')
+            ->addSelect('res.duration')
+            ->addSelect('c.name AS customerName')
+            ->addSelect('r.name AS roomName')
+            ->innerJoin('res.customer', 'c')
+            ->innerJoin('res.room', 'r')
+            ->orderBy('res.fromDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Reservations[] Returns an array of Reservations objects
     //  */

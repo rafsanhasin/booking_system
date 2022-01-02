@@ -181,7 +181,7 @@
                     $('#alert-cus-phone').html("").attr("hidden");
                 }
 
-                var path = "{{ path('reserve') }}";
+                var path = "{{ path('reserve.store') }}";
                 $.ajax({
                     type: 'POST',
                     url: path,

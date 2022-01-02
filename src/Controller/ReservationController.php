@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Entity\Reservations;
 use App\Repository\CustomerRepository;
+use App\Repository\ReservationsRepository;
 use App\Repository\RoomRepository;
 use App\Services\DateParserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,24 +14,43 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @Route("/reserve", name="reserve.")
+ */
 class ReservationController extends AbstractController
 {
     private $entityManager;
     private $roomRepo;
     private $customerRepo;
+    private $reservationRepo;
 
     public function __construct(
         ManagerRegistry $managerRegistry,
         RoomRepository $roomRepo,
-        CustomerRepository $customerRepo
+        CustomerRepository $customerRepo,
+        ReservationsRepository $reservationRepo
+
     ) {
         $this->entityManager = $managerRegistry->getManager();
         $this->roomRepo = $roomRepo;
         $this->customerRepo = $customerRepo;
+        $this->reservationRepo = $reservationRepo;
     }
 
     /**
-     * @Route("/reserve", name="reserve", methods={"POST"})
+     * @Route("/", name="index", methods={"GET"})
+     * @return Response
+     */
+
+    public function index() {
+        //dd($this->reservationRepo->getAllWithRelations());
+        return $this->render('reservation/index.html.twig',
+            ['reservations' => $this->reservationRepo->findAll()]
+        );
+    }
+
+    /**
+     * @Route("/", name="store", methods={"POST"})
      * @param Request $request
      * @return Response
      */
@@ -78,6 +98,5 @@ class ReservationController extends AbstractController
 
         $this->addFlash('success', "Reservation Successful");
         return new Response("success" , Response::HTTP_CREATED);
-        //dd($request->get('room'), $request->get('daterange'), $request->get('cusName'), $request->get('cusPhone'));
     }
 }
