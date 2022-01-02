@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\ReservationsRepository;
 use App\Repository\RoomRepository;
+use App\Services\DateParserService;
 use Carbon\Carbon;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
@@ -29,19 +30,16 @@ class BookingController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request): Response
+    public function index(Request $request, DateParserService $dateParserService): Response
     {
         if ($request->get('daterange')) {
             try{
-                $dateRangeParse = explode("-", $request->get('daterange'));
-
-                $from = Carbon::parse($dateRangeParse[0]);
-                $to = Carbon::parse($dateRangeParse[1]);
+                $dateRangeParsed = $dateParserService->parseDate($request->get('daterange'));
 
                 return $this->render('booking/index.html.twig',[
                     'availableRooms' => $this->roomRepo->getAvailableRooms(
-                        $from->format('Y-m-d'),
-                        $to->format('Y-m-d'))
+                        $dateRangeParsed['from']->format('Y-m-d'),
+                        $dateRangeParsed['to']->format('Y-m-d'))
                 ]);
 
             } catch (\Exception $exception) {

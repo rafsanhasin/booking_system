@@ -37,6 +37,16 @@ class Reservations
      */
     private $customer;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $totalPrice;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $duration;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +96,30 @@ class Reservations
     public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?int
+    {
+        return $this->totalPrice;
+    }
+
+    public function setTotalPrice(int $totalPrice): self
+    {
+        $this->totalPrice = $totalPrice;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }

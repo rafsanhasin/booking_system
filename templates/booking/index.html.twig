@@ -38,7 +38,7 @@
                     <td>{{ room.name }}</td>
                     <td>{{ room.price }}</td>
                     <td>
-                        <a href="" class="btn btn-primary"> Reserve</a>
+                        <button class="btn btn-primary" onclick="showInvoice({{ room.id }}, '{{ room.name }}', {{ room.price }})">Reserve</button>
                     </td>
                 </tr>
             {% endfor %}
@@ -50,6 +50,78 @@
         <div>No Rooms available</div>
     {% endif %}
     </div>
+
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Invoice</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-6">Room</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="room_name" readonly>
+                            </div>
+
+                            <div class="col-md-6">From</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="from" readonly>
+                            </div>
+
+                            <div class="col-md-6">To</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="to" readonly>
+                            </div>
+
+                            <div class="col-md-6">Duration</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="duration" readonly>
+                            </div>
+
+                            <div class="col-md-6">Unit Price</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="price" readonly>
+                            </div>
+
+                            <div class="col-md-6">Total Price</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="total-price" readonly>
+                            </div>
+
+                            <div class="col-md-6">Customer Name</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="cus-name" placeholder="">
+                                <span class="help-block alert-danger" hidden id="alert-cus-name"></span>
+                            </div>
+
+                            <div class="col-md-6">Customer Phone</div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="cus-phone">
+                                <span class="help-block alert-danger" hidden id="alert-cus-phone"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="submitReserve">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -57,8 +129,11 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
     <script type="text/javascript">
+        var room = 0;
         $(function() {
             var date = new Date();
             var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -74,12 +149,81 @@
 
             $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
                 $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                fromDate = picker.endDate.format('MM/DD/YYYY');
             });
 
             $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).val('');
             });
+
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $(this)
+                    .find("input,textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+            })
+
+            $('#submitReserve').on("click",function () {
+                if ($('#cus-name').val() == "") {
+                    $('#alert-cus-name').html("customer name is required").removeAttr("hidden");
+                    return;
+                }else {
+                    $('#alert-cus-name').html("").attr("hidden");
+                }
+
+                if ($('#cus-phone').val() == "") {
+                    $('#alert-cus-phone').html("customer phone is required").removeAttr("hidden");
+                    return;
+                }else {
+                    $('#alert-cus-phone').html("").attr("hidden");
+                }
+
+                var path = "{{ path('reserve') }}";
+                $.ajax({
+                    type: 'POST',
+                    url: path,
+                    data: {
+                        room: room,
+                        daterange: $('input[name="daterange"]').val(),
+                        cusName: $('#cus-name').val(),
+                        cusPhone: $('#cus-phone').val()
+                    },
+                    success: function(data) {
+                        window.location.href = '{{ path('booking.index') }}';
+                        console.log('success');
+                    }
+                });
+            });
+
         });
+
+        function showInvoice(roomId, roomName, price) {
+            room = roomId;
+
+            $('#room_name').val(roomName);
+
+            let dates = $('input[name="daterange"]').val().split( " - " );
+            console.log(dates[0], dates[1]);
+            let start = new Date( dates[0] );
+            let end   = new Date( dates[1] );
+
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            $('#from').val(dates[0]);
+            $('#to').val(dates[1]);
+            $('#duration').val(diffDays);
+            $('#price').val(price);
+            $('#total-price').val(price*diffDays);
+
+
+            $('#myModal').modal('toggle');
+        }
+
+
     </script>
 
 {% endblock %}
