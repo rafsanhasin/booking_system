@@ -19,6 +19,15 @@ class CustomerRepository extends ServiceEntityRepository
         parent::__construct($registry, Customer::class);
     }
 
+    public function findOneByPhone($phone): ?Customer
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.phone = :phone')
+            ->setParameter('phone', $phone)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Customer[] Returns an array of Customer objects
     //  */

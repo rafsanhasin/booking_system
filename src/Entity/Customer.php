@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,9 +30,14 @@ class Customer
     private $phone;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Reservations", mappedBy="reservation")
+     * @ORM\OneToMany(targetEntity="App\Entity\Reservations", mappedBy="customer")
      */
     private $reservation;
+
+    public function __construct()
+    {
+        $this->reservation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -79,6 +86,28 @@ class Customer
         }
 
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function addReservation(Reservations $reservation): self
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation[] = $reservation;
+            $reservation->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservations $reservation): self
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getCustomer() === $this) {
+                $reservation->setCustomer(null);
+            }
+        }
 
         return $this;
     }
