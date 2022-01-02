@@ -23,3 +23,7 @@
 
 #### 8. Seed predefined admin user and rooms : 
 `php bin/console doctrine:fixtures:load`
+
+#### 9. Admin login credentials : 
+    username : admin 
+    password : admin
