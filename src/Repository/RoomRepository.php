@@ -19,9 +19,11 @@ class RoomRepository extends ServiceEntityRepository
         parent::__construct($registry, Room::class);
     }
 
-    //where not (      `pbd`.`start_date` >= '2017-01-20'
-    //                 and `pbd`.`end_date` <= '2017-01-25')
-
+    /**
+     * @param $from
+     * @param $to
+     * @return mixed
+     */
     public function getAvailableRooms($from, $to) {
         $qb = $this->createQueryBuilder('r');
 

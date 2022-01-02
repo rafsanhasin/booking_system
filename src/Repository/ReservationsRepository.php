@@ -19,6 +19,9 @@ class ReservationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservations::class);
     }
 
+    /**
+     * @return mixed
+     */
     public function getAllWithRelations() {
         return $this->createQueryBuilder('res')
             ->select('res.id')

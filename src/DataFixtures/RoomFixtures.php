@@ -8,6 +8,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class RoomFixtures extends Fixture
 {
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager): void
     {
         $items= [50,100,200, 500];

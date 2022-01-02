@@ -11,11 +11,18 @@ class AdminFixtures extends Fixture
 {
     private $hasher;
 
+    /**
+     * AdminFixtures constructor.
+     * @param UserPasswordHasherInterface $hasher
+     */
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
     }
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();

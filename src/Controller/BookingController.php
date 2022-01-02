@@ -13,6 +13,10 @@ class BookingController extends AbstractController
 {
     private $roomRepo;
 
+    /**
+     * BookingController constructor.
+     * @param RoomRepository $roomRepo
+     */
     public function __construct(RoomRepository $roomRepo)
     {
         $this->roomRepo = $roomRepo;
@@ -21,6 +25,7 @@ class BookingController extends AbstractController
     /**
      * @Route("/", name="booking.index")
      * @param Request $request
+     * @param DateParserService $dateParserService
      * @return Response
      */
     public function index(Request $request, DateParserService $dateParserService): Response

@@ -19,6 +19,11 @@ class CustomerRepository extends ServiceEntityRepository
         parent::__construct($registry, Customer::class);
     }
 
+    /**
+     * @param $phone
+     * @return Customer|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findOneByPhone($phone): ?Customer
     {
         return $this->createQueryBuilder('c')

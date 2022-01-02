@@ -8,11 +8,14 @@
 
 namespace App\Services;
 
-
 use Carbon\Carbon;
 
 class DateParserService
 {
+    /**
+     * @param string $dateRange
+     * @return array
+     */
     public function parseDate(string $dateRange) : array {
         $dateRangeParse = explode("-", $dateRange);
 

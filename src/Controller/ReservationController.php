@@ -24,6 +24,13 @@ class ReservationController extends AbstractController
     private $customerRepo;
     private $reservationRepo;
 
+    /**
+     * ReservationController constructor.
+     * @param ManagerRegistry $managerRegistry
+     * @param RoomRepository $roomRepo
+     * @param CustomerRepository $customerRepo
+     * @param ReservationsRepository $reservationRepo
+     */
     public function __construct(
         ManagerRegistry $managerRegistry,
         RoomRepository $roomRepo,
@@ -43,7 +50,6 @@ class ReservationController extends AbstractController
      */
 
     public function index() {
-        //dd($this->reservationRepo->getAllWithRelations());
         return $this->render('reservation/index.html.twig',
             ['reservations' => $this->reservationRepo->findAll()]
         );
@@ -52,6 +58,7 @@ class ReservationController extends AbstractController
     /**
      * @Route("/", name="store", methods={"POST"})
      * @param Request $request
+     * @param DateParserService $dateParserService
      * @return Response
      */
     public function store(Request $request, DateParserService $dateParserService): Response
@@ -94,7 +101,6 @@ class ReservationController extends AbstractController
             $this->addFlash('error', 'Internal server error');
             return new Response($exception->getMessage() , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
 
         $this->addFlash('success', "Reservation Successful");
         return new Response("success" , Response::HTTP_CREATED);
